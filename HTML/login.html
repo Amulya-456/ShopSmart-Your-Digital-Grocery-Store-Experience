@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - Grocery Web App</title>
+  <title>Login - G-Mart</title>
   <link rel="stylesheet" href="../CSS/login.css" />
 </head>
 <body>
 
-  <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="logo">G-Mart</div>
     <ul class="nav-links">
@@ -20,75 +19,58 @@
     </ul>
   </nav>
 
-  <!-- Login Container -->
   <div class="login-container">
     <div class="login-box">
-      <div class="toggle-role">
-        <label for="role">Login as:</label>
-        <select id="role">
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-      <h2 id="login-title">User Login</h2>
-
+      <h2>Login</h2>
       <form id="login-form">
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="Enter email" required />
+        <label>Email</label>
+        <input type="email" id="email" required placeholder="Enter email" />
 
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter password" required />
+        <label>Password</label>
+        <input type="password" id="password" required placeholder="Enter password" />
 
         <button type="submit">Login</button>
       </form>
 
       <p class="signup-text">
         Don’t have an account? <a href="signup.html">Sign Up</a><br />
-        <a href="#">Forgot Password?</a>
+        <a href="forgot.html">Forgot Password?</a>
       </p>
     </div>
   </div>
 
-  <!-- JavaScript -->
   <script>
-    const roleSelect = document.getElementById('role');
-    const title = document.getElementById('login-title');
+    const form = document.getElementById("login-form");
 
-    roleSelect.addEventListener('change', () => {
-      const role = roleSelect.value;
-      title.textContent = role.charAt(0).toUpperCase() + role.slice(1) + ' Login';
-    });
-
-    const loginForm = document.getElementById('login-form');
-    loginForm.addEventListener('submit', async (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
       try {
-        const response = await fetch('http://localhost:5000/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({ email, password })
         });
 
-        const data = await response.json();
+        const data = await res.json();
 
-        if (response.ok) {
-          alert('Login successful!');
-          localStorage.setItem('token', data.token); // store token for future use
-          window.location.href = './item.html'; // redirect
+        if (data.success) {
+          alert("Login successful!");
+          window.location.href = "./item.html";
         } else {
-          alert(data.msg || 'Invalid username or password');
+          alert("Invalid email or password");
         }
-      } catch (error) {
-        console.error('Login error:', error);
-        alert('Something went wrong. Please try again.');
+
+      } catch (err) {
+        alert("Something went wrong. Try again.");
+        console.error(err);
       }
     });
   </script>
 
 </body>
 </html>
-
