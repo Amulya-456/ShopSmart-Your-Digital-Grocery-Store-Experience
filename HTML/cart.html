@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Cart - G-Mart</title>
+  <link rel="stylesheet" href="../CSS/items.css">
+  <style>
+    .cart-box {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: 80%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .place-order-btn {
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">G-Mart</div>
+    <ul class="nav-links">
+      <li><a href="item.html">Home</a></li>
+      <li><a href="#">MyCart</a></li>
+      <li><a href="orders.html">Orders</a></li>
+      <li><a href="#">History</a></li>
+      <li><a href="#">Logout</a></li>
+    </ul>
+  </nav>
+
+  <h2>Your Cart</h2>
+
+  <div class="cart-box" id="cart-container"></div>
+
+  <div style="text-align: center;">
+    <button class="place-order-btn" onclick="placeOrder()">Place Order</button>
+  </div>
+
+  <script>
+    const cartContainer = document.getElementById("cart-container");
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function renderCart() {
+      if (cart.length === 0) {
+        cartContainer.innerHTML = "<p>Your cart is empty.</p>";
+        return;
+      }
+
+      let html = '';
+      cart.forEach((item, index) => {
+        html += `
+          <div class="cart-item">
+            <span>${item.name}</span>
+            <span>${item.price}</span>
+          </div>
+        `;
+      });
+
+      cartContainer.innerHTML = html;
+    }
+
+    // 🛒 Place Order
+    function placeOrder() {
+      if (cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      fetch("http://localhost:5000/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ items: cart })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("✅ Order placed successfully!");
+        localStorage.removeItem("cart");
+        window.location.href = "orders.html"; // go to orders page
+      })
+      .catch(err => {
+        console.error(err);
+        alert("❌ Failed to place order. Try again.");
+      });
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
+

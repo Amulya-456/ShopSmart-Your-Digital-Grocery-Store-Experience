@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Items - Grocery Web App</title>
+  <link rel="stylesheet" href="../CSS/items.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <div class="logo">G-Mart</div>
+    <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./cart.html">cart</a></li>
+      <li><a href="./orders.html">Orders</a></li>
+      <li><a href="#">History</a></li>
+      <li><a href="#">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Header -->
+  <header align="left">
+    🛒 Grocery Items
+    <div class="cart-container" onclick="alert('Cart feature coming soon!')">
+      🛍️ <span id="cart-count" class="cart-badge">0</span>
+    </div>
+  </header>
+
+  <!-- Search and Category Filter -->
+  <div class="search-filter">
+    <input type="text" id="searchInput" placeholder="Search by product name..." oninput="searchItems()" />
+    <select id="categorySelect" onchange="categoryFilter()">
+      <option value="all">All Categories</option>
+      <option value="Vegetables">Vegetables</option>
+      <option value="fruits">Fruits</option>
+      <option value="Dairy">Dairy Items</option>
+      <option value="Meat">Meat</option>
+    </select>
+  </div>
+
+  <!-- Button Filter -->
+  <div class="category-container">
+    <button class="category" onclick="filterItems('Vegetables')">Vegetables</button>
+    <button class="category" onclick="filterItems('fruits')">Fruits</button>
+    <button class="category" onclick="filterItems('Dairy')">Dairy Items</button>
+    <button class="category" onclick="filterItems('Meat')">Meat</button>
+  </div>
+
+  <!-- Items List -->
+  <div id="items-container" class="items-container"></div>
+
+  <script src="../js/items.js"></script>
+</body>
+</html>
+

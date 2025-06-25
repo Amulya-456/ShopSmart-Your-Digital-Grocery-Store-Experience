@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - Grocery Web App</title>
+  <link rel="stylesheet" href="../CSS/login.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">G-Mart</div>
+    <ul class="nav-links">
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+
+  <div class="login-container">
+    <div class="login-box">
+      <h2>User Sign Up</h2>
+
+      <form id="signup-form">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Enter your name" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Create password" required />
+
+        <button type="submit">Sign Up</button>
+      </form>
+
+      <p class="signup-text">
+        Already have an account? <a href="login.html">Login here</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const signupForm = document.getElementById('signup-form');
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('http://localhost:5000/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert('Registration successful! Please login.');
+          window.location.href = 'login.html';
+        } else {
+          alert(data.msg || 'Registration failed');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Something went wrong.');
+      }
+    });
+  </script>
+
+</body>
+</html>
