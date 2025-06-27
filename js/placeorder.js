@@ -14,6 +14,7 @@ document.getElementById("orderForm").addEventListener("submit", async (e) => {
   // Prepare order items
   let items = [];
   if (buyNowItem) {
+    if (!buyNowItem.quantity) buyNowItem.quantity = 1;
     items.push(buyNowItem);
   } else if (cartItems.length > 0) {
     items = cartItems;
@@ -28,7 +29,7 @@ document.getElementById("orderForm").addEventListener("submit", async (e) => {
   const sanitizedItems = items.map(item => ({
     name: item.name,
     price: Number(item.price.replace(/[^0-9]/g, "")),
-    quantity: item.quantity,
+    quantity: item.quantity || 1,
     image: item.image
   }));
 
