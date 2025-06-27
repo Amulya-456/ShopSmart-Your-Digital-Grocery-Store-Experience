@@ -22,27 +22,40 @@ const items = [
   { name: "fish meat", price: "₹600/kg", image: "https://5.imimg.com/data5/WI/ZZ/OL/ANDROID-81993397/product-jpeg-1000x1000.jpg", category: "Meat" }
 ];
 
-let cartCount = 0;
 const container = document.getElementById("items-container");
 
 function loadCartCount() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cartCount = cart.length;
-  document.getElementById("cart-count").textContent = cartCount;
+  document.getElementById("cart-count").textContent = cart.length;
+  document.getElementById("cart-badge").textContent = cart.length;
 }
 
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast show';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
+}
+
+// ✅ Add quantity: 1 to all added items
 function addToCart(item) {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  item.quantity = 1;
   cart.push(item);
   localStorage.setItem("cart", JSON.stringify(cart));
-  cartCount++;
-  document.getElementById("cart-count").textContent = cartCount;
-  alert("✅ Added to cart");
+  loadCartCount();
+  showToast("✅ Added to cart");
 }
 
+// ✅ Add quantity: 1 for buy now
 function buyNow(item) {
-  localStorage.setItem("cart", JSON.stringify([item]));
-  window.location.href = "cart.html";
+  item.quantity = 1;
+  localStorage.setItem("buyNowItem", JSON.stringify(item));
+  window.location.href = "placeOrder.html";
 }
 
 function displayItems(filteredItems) {
@@ -54,21 +67,26 @@ function displayItems(filteredItems) {
       <img src="${item.image}" alt="${item.name}">
       <div class="item-name">${item.name}</div>
       <div class="item-price">${item.price}</div>
-      <button class="add-to-cart-btn" onclick='addToCart(${JSON.stringify(item)})'>Add to Cart</button>
-      <button class="add-to-cart-btn" style="margin-left: 10px; background-color:#3498db" onclick='buyNow(${JSON.stringify(item)})'>Buy Now</button>
+      <div class="button-row">
+        <button class="add-to-cart-btn">Add to Cart</button>
+        <button class="buy-now-btn">Buy Now</button>
+      </div>
     `;
+    card.querySelector(".add-to-cart-btn").addEventListener("click", () => addToCart(item));
+    card.querySelector(".buy-now-btn").addEventListener("click", () => buyNow(item));
     container.appendChild(card);
   });
 }
 
-// Initial load
-loadCartCount();
-displayItems(items);
-
-// Filter functions
 function filterItems(category) {
   const filtered = items.filter(item => item.category === category);
   displayItems(filtered);
+}
+
+function categoryFilter() {
+  const selected = document.getElementById("categorySelect").value;
+  if (selected === 'all') displayItems(items);
+  else filterItems(selected);
 }
 
 function searchItems() {
@@ -77,11 +95,5 @@ function searchItems() {
   displayItems(filtered);
 }
 
-function categoryFilter() {
-  const selected = document.getElementById("categorySelect").value;
-  if (selected === 'all') {
-    displayItems(items);
-  } else {
-    filterItems(selected);
-  }
-}
+loadCartCount();
+displayItems(items);

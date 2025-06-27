@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Signup - G-Mart</title>
+  <link rel="stylesheet" href="../CSS/admin.css" />
+</head>
+<body>
+  <nav>
+    <div>G-Mart</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#">MyCart</a></li>
+      <li><a href="#">Orders</a></li>
+      <li><a href="#">History</a></li>
+      <li><a href="login.html">User Login</a></li>
+      <li><a href="admin.html">Admin Login</a></li>
+    </ul>
+  </nav>
+
+  <h2>Admin Signup</h2>
+  <form id="admin-signup-form">
+    <label>Name</label>
+    <input type="text" id="admin-name" required placeholder="Enter name" />
+
+    <label>Email</label>
+    <input type="email" id="admin-email" required placeholder="Enter email" />
+
+    <label>Password</label>
+    <input type="password" id="admin-password" required placeholder="Enter password" />
+
+    <button type="submit">Sign Up</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("admin-signup-form");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("admin-name").value.trim();
+      const email = document.getElementById("admin-email").value.trim();
+      const password = document.getElementById("admin-password").value.trim();
+
+      try {
+        const res = await fetch("http://localhost:5000/api/admin/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          alert("✅ Admin registered successfully!");
+          window.location.href = "admin.html"; // redirect to admin login
+        } else {
+          alert(data.message || "Signup failed.");
+        }
+
+      } catch (err) {
+        alert("Something went wrong. Try again.");
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

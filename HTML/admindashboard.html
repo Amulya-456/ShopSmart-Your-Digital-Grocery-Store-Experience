@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - G-Mart</title>
+  <link rel="stylesheet" href="../CSS/admindashboard.css" />
+</head>
+<body>
+  <nav>
+    <div class="logo">Grocery Web App</div>
+    <ul>
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Users</a></li>
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Add product</a></li>
+      <li><a href="#">Orders</a></li>
+      <li><a href="#">Logout</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>Dashboard</h1>
+    <div class="dashboard-grid">
+      <div class="card">
+        <h3>Product Count</h3>
+        <p id="product-count">21 Products</p>
+        <button onclick="location.href='products.html'">View Products</button>
+      </div>
+      <div class="card">
+        <h3>User Count</h3>
+        <p id="user-count">0 Users</p>
+        <button onclick="location.href='users.html'">View Users</button>
+      </div>
+      <div class="card">
+        <h3>Order Count</h3>
+        <p id="order-count">0 Orders</p>
+        <button onclick="location.href='orders.html'">View Orders</button>
+      </div>
+      <div class="card">
+        <h3>Add Product</h3>
+        <button onclick="location.href='add_product.html'">Add</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Static product count from items.js
+    document.getElementById("product-count").innerText = "21 Products";
+
+    // Optional: replace below with real fetch() from backend APIs
+    document.getElementById("user-count").innerText = "5 Users"; // Example value
+    document.getElementById("order-count").innerText = "8 Orders"; // Example value
+  </script>
+</body>
+</html>
+

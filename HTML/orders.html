@@ -1,83 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>My Orders - G-Mart</title>
-  <link rel="stylesheet" href="../CSS/items.css">
-  <style>
-    .order-box {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      margin: 20px auto;
-      width: 80%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .order-box p {
-      margin: 5px 0;
-    }
-    .order-items {
-      margin-top: 10px;
-      padding-left: 15px;
-    }
-    .order-items li {
-      list-style: disc;
-    }
-    h2 {
-      text-align: center;
-      margin-top: 30px;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Orders</title>
+  <link rel="stylesheet" href="../CSS/orders.css" />
 </head>
 <body>
-  <!-- Top Navbar -->
-  <nav class="navbar">
-    <div class="logo">G-Mart</div>
-    <ul class="nav-links">
-      <li><a href="item.html">Home</a></li>
-      <li><a href="cart.html">MyCart</a></li>
-      <li><a href="#">Orders</a></li>
-      <li><a href="#">History</a></li>
-      <li><a href="#">Logout</a></li>
-    </ul>
-  </nav>
+  <div class="header">
+    <h1>G-Mart</h1>
+    <div class="nav">
+      <a href="home.html">Home</a>
+      <a href="item.html">Items</a>
+      <a href="cart.html">MyCart</a>
+      <a href="orders.html" class="active">Orders</a>
+      <a href="history.html">History</a>
+      <a href="login.html">Logout</a>
+    </div>
+  </div>
 
   <h2>My Orders</h2>
-  <div id="orders-container"></div>
+  <div class="orders-container" id="ordersContainer">
+    <p>Loading orders...</p>
+  </div>
 
-  <script>
-    const container = document.getElementById("orders-container");
-
-    fetch("http://localhost:5000/api/orders")
-      .then(res => res.json())
-      .then(data => {
-        if (!data.length) {
-          container.innerHTML = "<p style='text-align:center;'>No orders placed yet.</p>";
-        } else {
-          data.forEach((order, index) => {
-            const box = document.createElement("div");
-            box.className = "order-box";
-
-            const itemsList = order.items.map(item =>
-              `<li>${item.name} - ${item.price}</li>`
-            ).join("");
-
-            box.innerHTML = `
-              <p><strong>Order #${index + 1}</strong></p>
-              <p><strong>Date:</strong> ${new Date(order.placedAt).toLocaleString()}</p>
-              <p><strong>Items:</strong></p>
-              <ul class="order-items">${itemsList}</ul>
-            `;
-
-            container.appendChild(box);
-          });
-        }
-      })
-      .catch(err => {
-        console.error("Error fetching orders:", err);
-        container.innerHTML = "<p style='text-align:center;'>Failed to load orders.</p>";
-      });
-  </script>
+  <!-- ✅ Link external JavaScript file -->
+  <script src="../JS/orders.js"></script>
 </body>
 </html>
-

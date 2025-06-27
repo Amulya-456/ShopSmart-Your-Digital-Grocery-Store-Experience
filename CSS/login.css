@@ -119,4 +119,24 @@ body {
   color: #007bff;
   text-decoration: none;
 }
+.nav-links a.active {
+  font-weight: bold;
+  color: white;
+  border-bottom: 2px solid white;
+}
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #5b5554;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 1000;
+  font-weight: 500;
+}
+
 

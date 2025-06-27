@@ -7,15 +7,14 @@
   <link rel="stylesheet" href="../CSS/login.css" />
 </head>
 <body>
-
   <nav class="navbar">
     <div class="logo">G-Mart</div>
     <ul class="nav-links">
-      <li><a href="#">Home</a></li>
+      <li><a href="index.html">Home</a></li>
       <li><a href="#">MyCart</a></li>
       <li><a href="#">Orders</a></li>
       <li><a href="#">History</a></li>
-      <li><a href="#">Login</a></li>
+      <li><a href="#" class="active">Login</a></li>
     </ul>
   </nav>
 
@@ -44,25 +43,22 @@
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
 
       try {
         const res = await fetch("http://localhost:5000/api/auth/login", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password })
         });
 
         const data = await res.json();
-
-        if (data.success) {
-          alert("Login successful!");
-          window.location.href = "./item.html";
+        if (res.ok && data.success) {
+          alert("✅ Login successful!");
+          window.location.href = "item.html";
         } else {
-          alert("Invalid email or password");
+          alert(data.message || "Invalid credentials.");
         }
 
       } catch (err) {
@@ -71,6 +67,7 @@
       }
     });
   </script>
-
 </body>
 </html>
+
+

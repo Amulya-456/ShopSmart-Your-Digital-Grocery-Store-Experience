@@ -1,66 +1,64 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
-// ✅ Signup Route
+// ✅ SIGNUP Route
 router.post('/signup', async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
 
   try {
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.json({ success: false, msg: "User already exists" });
+    if (!name || !email || !password || password.length < 6) {
+      return res.status(400).json({ success: false, message: 'All fields required. Password must be 6+ chars.' });
     }
 
-    const newUser = new User({ email, password });
-    await newUser.save();
+    const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: 'User already exists' });
+    }
 
-    res.json({ success: true });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: hashedPassword
+    });
+
+    await newUser.save();
+    res.status(201).json({ success: true, message: 'Signup successful' });
+
   } catch (err) {
-    console.error(err);
-    res.json({ success: false, msg: "Signup failed" });
+    console.error("❌ Signup error:", err.message);
+    res.status(500).json({ success: false, message: 'Signup failed. Server error.' });
   }
 });
 
-// ✅ Login Route
+// ✅ LOGIN Route
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
-
-    if (!user || user.password !== password) {
-      return res.json({ success: false, msg: "Invalid credentials" });
-    }
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.json({ success: false, msg: "Login failed" });
-  }
-});
-
-// ✅ Forgot Password Route
-router.post('/reset-password', async (req, res) => {
-  const { email, newPassword } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
-      return res.json({ success: false, msg: "User not found" });
+      return res.status(400).json({ success: false, message: 'Invalid email or password' });
     }
 
-    user.password = newPassword;
-    await user.save();
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: 'Invalid email or password' });
+    }
 
-    res.json({ success: true, msg: "Password updated successfully" });
+    res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      user: { name: user.name, email: user.email }
+    });
+
   } catch (err) {
-    console.error(err);
-    res.json({ success: false, msg: "Reset failed" });
+    console.error("❌ Login error:", err.message);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
-// ✅ Export router to be used in server.js
 module.exports = router;
+

@@ -9,17 +9,35 @@
   <nav class="navbar">
     <div class="logo">G-Mart</div>
     <ul class="nav-links">
-      <li><a href="./index.html">Home</a></li>
-      <li><a href="./cart.html">MyCart</a></li>
-      <li><a href="./orders.html">Orders</a></li>
-      <li><a href="#">History</a></li>
-      <li><a href="login.html">Login</a></li>
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#" class="protected-link">MyCart</a></li>
+      <li><a href="#" class="protected-link">Orders</a></li>
+      <li><a href="#" class="protected-link">History</a></li>
+      <li><a href="login.html">Login/Signup</a></li>
     </ul>
   </nav>
 
   <div class="hero">
     <h1>Welcome to Our Grocery Web App</h1>
-    <a href="login.html" class="hero-btn"></a>
+    <a href="item.html" class="hero-btn">shop now</a>
   </div>
+
+  <!-- Toast Message -->
+  <div id="toast" class="toast">You need to log in first!</div>
+
+  <script>
+    const protectedLinks = document.querySelectorAll('.protected-link');
+    const toast = document.getElementById('toast');
+
+    protectedLinks.forEach(link => {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        toast.style.display = 'block';
+        setTimeout(() => {
+          toast.style.display = 'none';
+        }, 2000);
+      });
+    });
+  </script>
 </body>
 </html>

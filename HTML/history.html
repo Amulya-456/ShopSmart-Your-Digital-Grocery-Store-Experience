@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order History - G-Mart</title>
+  <link rel="stylesheet" href="../CSS/login.css" />
+  <style>
+    .history-container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .order-card {
+      border: 1px solid #aaa;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .order-card p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">G-Mart</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="cart.html">MyCart</a></li>
+      <li><a href="orders.html">Orders</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+
+  <!-- History Section -->
+  <div class="history-container">
+    <h2>My History</h2>
+    <div id="order-history"></div>
+  </div>
+
+  <!-- Script to fetch and display order history -->
+  <script>
+    fetch('http://localhost:5000/api/orders')
+      .then(res => res.json())
+      .then(orders => {
+        const historyDiv = document.getElementById('order-history');
+        if (orders.length === 0) {
+          historyDiv.innerHTML = "<p>No orders found.</p>";
+          return;
+        }
+
+        orders.forEach(order => {
+          const card = document.createElement('div');
+          card.className = 'order-card';
+          card.innerHTML = `
+            <p><strong>Order ID:</strong> ${order._id}</p>
+            <p><strong>Date:</strong> ${new Date(order.placedAt).toLocaleString()}</p>
+            <p><strong>Items:</strong> ${order.items.join(', ')}</p>
+            <p><strong>Status:</strong> ${order.status || "Processing"}</p>
+            <p><strong>Total Price:</strong> ₹${order.total || '---'}</p>
+            <p><strong>Payment Method:</strong> ${order.paymentMethod || '---'}</p>
+          `;
+          historyDiv.appendChild(card);
+        });
+      })
+      .catch(err => {
+        document.getElementById('order-history').innerHTML = "Failed to load history.";
+        console.error(err);
+      });
+  </script>
+
+</body>
+</html>
+

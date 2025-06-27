@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login - G-Mart</title>
+  <link rel="stylesheet" href="../CSS/admin.css" />
+</head>
+
+<body>
+  <nav>
+    <div>G-Mart</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#">MyCart</a></li>
+      <li><a href="#">Orders</a></li>
+      <li><a href="#">History</a></li>
+      <li><a href="login.html">User Login/Admin login</a></li>
+    </ul>
+  </nav>
+
+  <h2>Admin Login</h2>
+  <form id="admin-login-form">
+    <label>Email</label><br />
+    <input type="email" id="admin-email" required placeholder="Enter admin email" /><br /><br />
+
+    <label>Password</label><br />
+    <input type="password" id="admin-password" required placeholder="Enter password" /><br /><br />
+
+    <button type="submit">Login</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("admin-login-form");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("admin-email").value.trim();
+      const password = document.getElementById("admin-password").value.trim();
+
+      try {
+        const res = await fetch("http://localhost:5000/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          alert("✅ Admin login successful!");
+          window.location.href = "admin_dashboard.html"; // or change to your admin page
+        } else {
+          alert(data.message || "Invalid admin credentials.");
+        }
+
+      } catch (err) {
+        alert("Something went wrong. Try again.");
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
