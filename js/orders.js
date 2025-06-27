@@ -1,43 +1,46 @@
-window.addEventListener("DOMContentLoaded", async () => {
+fetch('http://localhost:5000/api/orders')
+  .then(response => {
+    console.log("Status:", response.status);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log("Fetched Orders:", data);
+    renderOrders(data);
+  })
+  .catch(error => {
+    console.error("Fetch error:", error);
+    document.getElementById("ordersContainer").innerHTML = `
+      <div class="error">⚠️ Error loading orders. Try again later.</div>
+    `;
+  });
+
+function renderOrders(orders) {
   const container = document.getElementById("ordersContainer");
 
-  try {
-    const response = await fetch("http://localhost:5000/api/orders");
-
-    if (!response.ok) throw new Error(`Status: ${response.status}`);
-
-    const orders = await response.json();
-
-    if (!orders.length) {
-      container.innerHTML = "<p>No orders found.</p>";
-      return;
-    }
-
-    container.innerHTML = "";
-
-    orders.forEach(order => {
-      const card = document.createElement("div");
-      card.className = "order-card";
-
-      let itemsList = order.items.map(item => `
-        <li>${item.name} × ${item.quantity} — ₹${item.price * item.quantity}</li>
-      `).join("");
-
-      card.innerHTML = `
-        <p><strong>Order ID:</strong> ${order._id}</p>
-        <p><strong>Name:</strong> ${order.firstName} ${order.lastName}</p>
-        <p><strong>Phone:</strong> ${order.phone}</p>
-        <p><strong>Address:</strong> ${order.address}</p>
-        <p><strong>Date:</strong> ${new Date(order.placedAt).toLocaleString()}</p>
-        <p><strong>Total:</strong> ₹${order.total}</p>
-        <p><strong>Status:</strong> ${order.status || "Pending"}</p>
-        <p><strong>Payment:</strong> ${order.paymentMethod}</p>
-        <ul>${itemsList}</ul>
-      `;
-      container.appendChild(card);
-    });
-  } catch (err) {
-    container.innerHTML = "<p>⚠️ Error loading orders. Try again later.</p>";
-    console.error("Error fetching orders:", err);
+  if (!orders.length) {
+    container.innerHTML = "<p>No orders found.</p>";
+    return;
   }
-});
+
+  container.innerHTML = orders.map(order => `
+    <div class="order-card">
+      <h3>${order.firstName} ${order.lastName}</h3>
+      <p><strong>Phone:</strong> ${order.phone}</p>
+      <p><strong>Address:</strong> ${order.address}</p>
+      <p><strong>Payment:</strong> ${order.paymentMethod}</p>
+      <p><strong>Total:</strong> ₹${order.total}</p>
+      <p><strong>Status:</strong> ${order.status || 'Pending'}</p>
+      <div>
+        <strong>Items:</strong>
+        <ul>
+          ${order.items.map(item => `
+            <li>${item.name} - ₹${item.price} × ${item.quantity}</li>
+          `).join('')}
+        </ul>
+      </div>
+    </div>
+  `).join('');
+}

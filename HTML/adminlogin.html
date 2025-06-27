@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login - G-Mart</title>
-  <link rel="stylesheet" href="../CSS/login-selection.css" />
+  <link rel="stylesheet" href="../CSS/login.css" />
 </head>
 <body>
   <nav class="navbar">
@@ -18,12 +18,53 @@
     </ul>
   </nav>
 
-  <div class="login-selection">
-    <h2>Select Login Type</h2>
-    <div class="login-buttons">
-      <button onclick="window.location.href='user-login.html'">User</button>
-      <button onclick="window.location.href='admin-login.html'">Admin</button>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Login</h2>
+      <form id="login-form">
+        <label>Email</label>
+        <input type="email" id="email" required placeholder="Enter email" />
+
+        <label>Password</label>
+        <input type="password" id="password" required placeholder="Enter password" />
+
+        <button type="submit">Login</button>
+      </form>
+
+      <p class="signup-text">
+        Don’t have an account? <a href="signup.html">Sign Up</a><br />
+      </p>
     </div>
   </div>
+
+  <script>
+    const form = document.getElementById("login-form");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          alert("✅ Login successful!");
+          window.location.href = "dashboard.html";
+        } else {
+          alert(data.message || "Invalid credentials.");
+        }
+
+      } catch (err) {
+        alert("Something went wrong. Try again.");
+        console.error(err);
+      }
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Product</title>
+  <link rel="stylesheet" href="../CSS/product.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">G-Mart</div>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="users.html">Users</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="addproduct.html" class="active">Add Product</a></li>
+      <li><a href="orders.html">Orders</a></li>
+      <li><a href="logout.html">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h2>Add Product</h2>
+    <form id="productForm">
+      <div class="form-row">
+        <div>
+          <label>Product Name</label>
+          <input type="text" id="productname" required placeholder="Enter product name" />
+        </div>
+        <div>
+          <label>Rating</label>
+          <input type="number" id="rating" required placeholder="Enter product rating" />
+        </div>
+        <div>
+          <label>Price</label>
+          <input type="number" id="price" required placeholder="Enter product price" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Image URL</label>
+          <input type="text" id="image" required placeholder="Enter image URL" />
+        </div>
+        <div>
+          <label>Category</label>
+          <select id="category" required>
+            <option value="">Select Category</option>
+            <option value="vegetables">Vegetables</option>
+            <option value="fruits">Fruits</option>
+            <option value="dairy">Dairy</option>
+            <option value="meat">Meat</option>
+          </select>
+        </div>
+        <div>
+          <label>Count in Stock</label>
+          <input type="number" id="countInStock" required placeholder="Enter count in stock" />
+        </div>
+      </div>
+
+      <div class="form-row full-width">
+        <div>
+          <label>Description</label>
+          <textarea id="description" required placeholder="Enter product description"></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Add Product</button>
+    </form>
+  </div>
+
+  <script src="../js/addproduct.js"></script>
+</body>
+</html>

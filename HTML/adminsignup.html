@@ -3,47 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Signup - G-Mart</title>
-  <link rel="stylesheet" href="../CSS/admin.css" />
+  <title>Signup - G-Mart</title>
+  <link rel="stylesheet" href="../CSS/login.css" />
 </head>
 <body>
-  <nav>
-    <div>G-Mart</div>
-    <ul>
+  <nav class="navbar">
+    <div class="logo">G-Mart</div>
+    <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="#">MyCart</a></li>
       <li><a href="#">Orders</a></li>
       <li><a href="#">History</a></li>
-      <li><a href="login.html">User Login</a></li>
-      <li><a href="admin.html">Admin Login</a></li>
+      <li><a href="login.html">Login</a></li>
     </ul>
   </nav>
 
-  <h2>Admin Signup</h2>
-  <form id="admin-signup-form">
-    <label>Name</label>
-    <input type="text" id="admin-name" required placeholder="Enter name" />
-
-    <label>Email</label>
-    <input type="email" id="admin-email" required placeholder="Enter email" />
-
-    <label>Password</label>
-    <input type="password" id="admin-password" required placeholder="Enter password" />
-
-    <button type="submit">Sign Up</button>
-  </form>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Sign Up</h2>
+      <form id="signup-form">
+        <label>Name</label>
+        <input type="text" id="name" required placeholder="Enter Name" />
+        <label>Email</label>
+        <input type="email" id="email" required placeholder="Enter email" />
+        <label>Password</label>
+        <input type="password" id="password" required placeholder="Enter password" />
+        <button type="submit">Sign Up</button>
+      </form>
+      <p class="signup-text">
+        Already have an account? <a href="login.html">Login</a>
+      </p>
+    </div>
+  </div>
 
   <script>
-    const form = document.getElementById("admin-signup-form");
+    const form = document.getElementById("signup-form");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const name = document.getElementById("admin-name").value.trim();
-      const email = document.getElementById("admin-email").value.trim();
-      const password = document.getElementById("admin-password").value.trim();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!name || !email || !password) {
+        alert("Please fill in all fields.");
+        return;
+      }
 
       try {
-        const res = await fetch("http://localhost:5000/api/admin/signup", {
+        const res = await fetch("http://localhost:5000/api/auth/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email, password })
@@ -51,8 +60,8 @@
 
         const data = await res.json();
         if (res.ok && data.success) {
-          alert("✅ Admin registered successfully!");
-          window.location.href = "admin.html"; // redirect to admin login
+          alert("✅ Signup successful!");
+          window.location.href = "dashboard.html";
         } else {
           alert(data.message || "Signup failed.");
         }

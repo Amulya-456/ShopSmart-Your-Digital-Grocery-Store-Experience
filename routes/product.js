@@ -1,28 +1,34 @@
-const mongoose = require('mongoose');
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const router = express.Router();
+const Product = require("../models/product"); // ⬅ Make sure this is correctly imported
 
-const app = express();
+// POST /api/products (add a new product)
+router.post("/", async (req, res) => {
+  try {
+    const { productname, description, price, image, category, countInStock, rating } = req.body;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+    if (!productname || !description || !price || !image || !category || !countInStock || !rating) {
+      return res.status(400).send({ message: "Missing required fields" });
+    }
 
-// Routes
-const authRoutes = require('./routes/auth');
-app.use('/api/auth', authRoutes);
-
-// ✅ ADD THIS LINE (for placing orders)
-const orderRoutes = require('./routes/order');
-app.use('/api/orders', orderRoutes);
-
-// MongoDB Connection
-mongoose.connect('mongodb+srv://ammu:Amulya09@cluster0.pswzycq.mongodb.net/shopsmart?retryWrites=true&w=majority')
-  .then(() => {
-    console.log('✅ MongoDB connected');
-    app.listen(5000, () => {
-      console.log('🚀 Server running at http://localhost:5000');
+    const product = new Product({
+      productname,
+      description,
+      price,
+      image,
+      category,
+      countInStock,
+      rating,
+      dateCreated: new Date(),
     });
-  })
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+
+    await product.save();
+
+    res.status(201).send(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Internal server error" });
+  }
+});
+
+module.exports = router;

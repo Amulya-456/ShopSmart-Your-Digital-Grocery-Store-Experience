@@ -1,26 +1,35 @@
-const express = require('express');
+// server.js
+const express  = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const cors     = require('cors');
 require('dotenv').config();
 
 const app = express();
+
+// ─── Middleware ────────────────────────────────────────────────────────────────
 app.use(cors());
 app.use(express.json());
 
-// 👇 Auth route
-const authRoutes = require('./routes/auth');
-app.use('/api/auth', authRoutes);
+// ─── Route Imports ─────────────────────────────────────────────────────────────
+const authRoutes    = require('./routes/auth');
+const orderRoutes   = require('./routes/order');
+const userRoutes    = require('./routes/user');
+const productRoutes = require('./routes/product');
 
-// ✅ Order route
-const orderRoutes = require('./routes/order');
-app.use('/api/orders', orderRoutes); // ✅ This must exist
+// ─── Mount Routes ──────────────────────────────────────────────────────────────
+app.use('/api/auth',    authRoutes);
+app.use('/api/orders',  orderRoutes);
+app.use('/api/users',   userRoutes);
+app.use('/api/products', productRoutes);
 
-// 👇 MongoDB connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/shopsmart')
+// ─── Connect to MongoDB & Start Server ────────────────────────────────────────
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser:    true,
+    useUnifiedTopology: true
+  })
   .then(() => {
     console.log('✅ MongoDB connected');
-    app.listen(5000, () => {
-      console.log('🚀 Server running at http://localhost:5000');
-    });
+    app.listen(5000, () => console.log('🚀 Server at http://localhost:5000'));
   })
   .catch(err => console.error('❌ MongoDB connection error:', err));
