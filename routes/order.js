@@ -2,7 +2,17 @@ const express = require("express");
 const router = express.Router();
 const Order = require("../models/order");
 
-// POST /api/orders
+// ✅ GET /api/orders - fetch all orders
+router.get("/", async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ placedAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ✅ POST /api/orders - place a new order
 router.post("/", async (req, res) => {
   try {
     const { firstName, lastName, phone, address, paymentMethod, items, total } = req.body;

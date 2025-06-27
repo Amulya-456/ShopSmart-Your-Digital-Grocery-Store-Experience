@@ -2,7 +2,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("ordersContainer");
 
   try {
-    const response = await fetch("http://localhost:5000/api/orders"); // ✅ Use full URL
+    const response = await fetch("http://localhost:5000/api/orders");
 
     if (!response.ok) throw new Error(`Status: ${response.status}`);
 
@@ -18,6 +18,11 @@ window.addEventListener("DOMContentLoaded", async () => {
     orders.forEach(order => {
       const card = document.createElement("div");
       card.className = "order-card";
+
+      let itemsList = order.items.map(item => `
+        <li>${item.name} × ${item.quantity} — ₹${item.price * item.quantity}</li>
+      `).join("");
+
       card.innerHTML = `
         <p><strong>Order ID:</strong> ${order._id}</p>
         <p><strong>Name:</strong> ${order.firstName} ${order.lastName}</p>
@@ -27,6 +32,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         <p><strong>Total:</strong> ₹${order.total}</p>
         <p><strong>Status:</strong> ${order.status || "Pending"}</p>
         <p><strong>Payment:</strong> ${order.paymentMethod}</p>
+        <ul>${itemsList}</ul>
       `;
       container.appendChild(card);
     });
